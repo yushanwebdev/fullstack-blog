@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
-import articleContent from "../article-content";
 
-export default function ArticleList() {
+export default function ArticleList({ articles }) {
   return (
     <>
-      <h1>Articles</h1>
-      {articleContent.map((item, key) => (
+      {articles.map((item, key) => (
         <Link
           to={`/article/${item.name}`}
           className="article-list-item"
