@@ -5,15 +5,19 @@ import ArticlesList from "./pages/ArticlesList";
 import ArticlePage from "./pages/ArticlePage";
 
 import "./App.css";
+import NavList from "./NavList";
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Route path="/" component={HomePage} exact />
-        <Route path="/about" component={AboutPage} />
-        <Route path="/articles-list" component={ArticlesList} />
-        <Route path="/article" component={ArticlePage} />
+        <NavList />
+        <div id="page-body">
+          <Route path="/" component={HomePage} exact />
+          <Route path="/about" component={AboutPage} />
+          <Route path="/articles-list" component={ArticlesList} />
+          <Route path="/article/:name" component={ArticlePage} />
+        </div>
       </div>
     </Router>
   );
