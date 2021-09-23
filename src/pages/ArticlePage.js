@@ -1,5 +1,6 @@
 import articleContent from "../article-content";
 import ArticleList from "../components/ArticleList";
+import NotFoundPage from "./NotFoundPage";
 
 export default function ArticlePage({ match }) {
   const name = match.params.name;
@@ -7,7 +8,7 @@ export default function ArticlePage({ match }) {
   const otherArticles = articleContent.filter((item) => item.name !== name);
 
   if (!article) {
-    return <h1>Article does not exist!</h1>;
+    return <NotFoundPage />;
   }
 
   return (
