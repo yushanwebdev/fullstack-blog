@@ -1,3 +1,3 @@
 export default function ArticleList() {
-  return <h1>Article</h1>;
+  return <h1>Articles</h1>;
 }
