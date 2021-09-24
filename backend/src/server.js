@@ -10,61 +10,57 @@ const uri = "mongodb+srv://yushan:tWf42UXt8VFQwYk@cluster0.o861a.mongodb.net";
 const client = new MongoClient(uri);
 const dbName = "fullstack-blog";
 
-app.get("/api/articles/:name", async (req, res) => {
-  const articleName = req.params.name;
-
-  try {
-    await client.connect();
-    console.log("Connected successfully to server");
-
-    const db = client.db(dbName);
-
-    const articleInfo = await db
-      .collection("articles")
-      .find({ name: articleName })
-      .toArray();
-
-    res.status(200).json(articleInfo);
-
-    client.close();
-  } catch (error) {
-    res.status(500).json({ message: "Error connecting to db", error });
-  }
-});
-
-app.post("/api/articles/:name/upvote", async (req, res) => {
-  const articleName = req.params.name;
-
+const withDB = async (operations, res) => {
   try {
     await client.connect();
     console.log("Connected successfully to server");
 
     const collection = client.db(dbName).collection("articles");
 
-    await collection.update({ name: articleName }, { $inc: { upvotes: 1 } });
-
-    const updatedArticleInfo = await collection
-      .find({ name: articleName })
-      .toArray();
-
-    res.status(200).json(updatedArticleInfo);
+    await operations(collection);
 
     client.close();
   } catch (error) {
     res.status(500).json({ message: "Error connecting to db", error });
   }
+};
+
+app.get("/api/articles/:name", async (req, res) => {
+  const articleName = req.params.name;
+
+  withDB(async (collection) => {
+    const articleInfo = await collection.findOne({ name: articleName });
+
+    res.status(200).json(articleInfo);
+  }, res);
+});
+
+app.post("/api/articles/:name/upvote", async (req, res) => {
+  const articleName = req.params.name;
+
+  withDB(async (collection) => {
+    await collection.update({ name: articleName }, { $inc: { upvotes: 1 } });
+
+    const updatedArticleInfo = await collection.findOne({ name: articleName });
+
+    res.status(200).json(updatedArticleInfo);
+  }, res);
 });
 
 app.post("/api/articles/:name/add-comment", (req, res) => {
   const { username, text } = req.body;
   const articleName = req.params.name;
 
-  articlesInfo[articleName].comments.push({
-    username,
-    text,
-  });
+  withDB(async (collection) => {
+    await collection.updateOne(
+      { name: articleName },
+      { $push: { comments: { username, text } } }
+    );
 
-  res.status(200).send(articlesInfo[articleName]);
+    const updatedArticleInfo = await collection.findOne({ name: articleName });
+
+    res.status(200).json(updatedArticleInfo);
+  });
 });
 
 app.listen(5000, () => console.log("Listening on port 5000"));
