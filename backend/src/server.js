@@ -39,7 +39,7 @@ app.post("/api/articles/:name/upvote", async (req, res) => {
   const articleName = req.params.name;
 
   withDB(async (collection) => {
-    await collection.update({ name: articleName }, { $inc: { upvotes: 1 } });
+    await collection.updateOne({ name: articleName }, { $inc: { upvotes: 1 } });
 
     const updatedArticleInfo = await collection.findOne({ name: articleName });
 
