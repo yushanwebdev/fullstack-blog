@@ -12,7 +12,7 @@ export default function ArticlePage({ match }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetch(`http://localhost:5000/api/articles/${name}`);
+      const result = await fetch(`/api/articles/${name}`);
       const body = await result.json();
       setArticleInfo(body);
     };
