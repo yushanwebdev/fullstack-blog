@@ -1,4 +1,4 @@
-// Refer this Guide to setup the MongoDB in the app (https://github.com/mongodb/node-mongodb-native)
+// Refer this Guide to setup the MongoDB latest version in the app (https://github.com/mongodb/node-mongodb-native)
 import express from "express";
 import { MongoClient } from "mongodb";
 
@@ -32,14 +32,27 @@ app.get("/api/articles/:name", async (req, res) => {
   }
 });
 
-app.post("/api/articles/:name/upvote", (req, res) => {
+app.post("/api/articles/:name/upvote", async (req, res) => {
   const articleName = req.params.name;
 
-  articlesInfo[articleName].upvotes += 1;
+  try {
+    await client.connect();
+    console.log("Connected successfully to server");
 
-  res
-    .status(200)
-    .send(`${articleName} now has ${articlesInfo[articleName].upvotes} votes.`);
+    const collection = client.db(dbName).collection("articles");
+
+    await collection.update({ name: articleName }, { $inc: { upvotes: 1 } });
+
+    const updatedArticleInfo = await collection
+      .find({ name: articleName })
+      .toArray();
+
+    res.status(200).json(updatedArticleInfo);
+
+    client.close();
+  } catch (error) {
+    res.status(500).json({ message: "Error connecting to db", error });
+  }
 });
 
 app.post("/api/articles/:name/add-comment", (req, res) => {
