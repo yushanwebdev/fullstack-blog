@@ -1,23 +1,36 @@
+// Refer this Guide to setup the MongoDB in the app (https://github.com/mongodb/node-mongodb-native)
 import express from "express";
-
-const articlesInfo = {
-  "learn-react": {
-    upvotes: 0,
-    comments: [],
-  },
-  "learn-node": {
-    upvotes: 0,
-    comments: [],
-  },
-  "my-thoughts-on-resumes": {
-    upvotes: 0,
-    comments: [],
-  },
-};
+import { MongoClient } from "mongodb";
 
 const app = express();
 
 app.use(express.json());
+
+const uri = "mongodb+srv://yushan:tWf42UXt8VFQwYk@cluster0.o861a.mongodb.net";
+const client = new MongoClient(uri);
+const dbName = "fullstack-blog";
+
+app.get("/api/articles/:name", async (req, res) => {
+  const articleName = req.params.name;
+
+  try {
+    await client.connect();
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    const articleInfo = await db
+      .collection("articles")
+      .find({ name: articleName })
+      .toArray();
+
+    res.status(200).json(articleInfo);
+
+    client.close();
+  } catch (error) {
+    res.status(500).json({ message: "Error connecting to db", error });
+  }
+});
 
 app.post("/api/articles/:name/upvote", (req, res) => {
   const articleName = req.params.name;
