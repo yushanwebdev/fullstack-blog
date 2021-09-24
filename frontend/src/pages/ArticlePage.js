@@ -11,7 +11,7 @@ export default function ArticlePage({ match }) {
   const [articleInfo, setArticleInfo] = useState({ upvotes: 0, comments: [] });
 
   useEffect(() => {
-    setArticleInfo({ upvotes: 3 });
+    setArticleInfo({ upvotes: Math.ceil(Math.random() * 10) });
   }, []);
 
   if (!article) {
