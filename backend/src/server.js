@@ -1,12 +1,16 @@
 // Refer this Guide to setup the MongoDB latest version in the app (https://github.com/mongodb/node-mongodb-native)
+// Help this Guide to get values from .env variables (https://github.com/motdotla/dotenv#config)
 import express from "express";
 import { MongoClient } from "mongodb";
+import { config } from "dotenv-flow";
 
 const app = express();
 
+config();
+
 app.use(express.json());
 
-const uri = "mongodb+srv://yushan:tWf42UXt8VFQwYk@cluster0.o861a.mongodb.net";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.o861a.mongodb.net`;
 const client = new MongoClient(uri);
 const dbName = "fullstack-blog";
 
