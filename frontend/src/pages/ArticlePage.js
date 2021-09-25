@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import articleContent from "../article-content";
 import ArticleList from "../components/ArticleList";
+import CommentsList from "../components/CommentsList";
 import NotFoundPage from "./NotFoundPage";
 
 export default function ArticlePage({ match }) {
@@ -31,6 +32,7 @@ export default function ArticlePage({ match }) {
       {article.content.map((item, key) => (
         <p key={key}>{item}</p>
       ))}
+      <CommentsList comments={articleInfo.comments} />
       <h3>Other Articles</h3>
       <ArticleList articles={otherArticles} />
     </>
