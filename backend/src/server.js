@@ -64,7 +64,7 @@ app.post("/api/articles/:name/add-comment", (req, res) => {
     const updatedArticleInfo = await collection.findOne({ name: articleName });
 
     res.status(200).json(updatedArticleInfo);
-  });
+  }, res);
 });
 
 app.listen(5000, () => console.log("Listening on port 5000"));
