@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import articleContent from "../article-content";
+import AddCommentForm from "../components/AddCommentForm";
 import ArticleList from "../components/ArticleList";
 import CommentsList from "../components/CommentsList";
 import UpvotesSection from "../components/UpvotesSection";
@@ -38,6 +39,7 @@ export default function ArticlePage({ match }) {
         <p key={key}>{item}</p>
       ))}
       <CommentsList comments={articleInfo.comments} />
+      <AddCommentForm articleName={name} setArticleInfo={setArticleInfo} />
       <h3>Other Articles</h3>
       <ArticleList articles={otherArticles} />
     </>
