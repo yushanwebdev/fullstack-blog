@@ -3,11 +3,13 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import { config } from "dotenv-flow";
+import path from "path";
 
 const app = express();
 
 config();
 
+app.use(express.static(path.join(__dirname, "/build")));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.o861a.mongodb.net`;
@@ -65,6 +67,10 @@ app.post("/api/articles/:name/add-comment", (req, res) => {
 
     res.status(200).json(updatedArticleInfo);
   }, res);
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
 app.listen(5000, () => console.log("Listening on port 5000"));
