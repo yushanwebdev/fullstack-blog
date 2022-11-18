@@ -40,7 +40,7 @@ I always had an aspiration to develop an application from UI to hosting using th
 
 ### _Frontend_
 
-### `yarn install`
+### `yarn`
 
 ### _Backend_
 
